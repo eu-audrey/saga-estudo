@@ -8,6 +8,7 @@ public class PedidoDTO {
     private String idPedido;
     private Integer idUsuario;
     private Integer idProduto;
+    private String descricao;
     private BigDecimal valor;
     private StatusOrquestrador status;
 
@@ -35,6 +36,14 @@ public class PedidoDTO {
         this.idProduto = idProduto;
     }
 
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
     public BigDecimal getValor() {
         return valor;
     }
@@ -57,6 +66,7 @@ public class PedidoDTO {
                 "idPedido='" + idPedido + '\'' +
                 ", idUsuario=" + idUsuario +
                 ", idProduto=" + idProduto +
+                ", descricao='" + descricao + '\'' +
                 ", valor=" + valor +
                 ", status=" + status +
                 '}';

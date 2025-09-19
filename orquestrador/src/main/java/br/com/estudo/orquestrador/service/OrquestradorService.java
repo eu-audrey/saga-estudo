@@ -16,29 +16,44 @@ public class OrquestradorService {
     private RestTemplate restTemplate;
 
     private static final String PEDIDO_SERVICE_URL = "http://localhost:8001/api/pedidos";
+    private static final String PAGAMENTO_SERVICE_URL = "http://localhost:8002/api/pagamentos";
 
     public void iniciarSaga(OrquestradorRequestDTO request) {
-        System.out.println("LOGICA DA SAGA INICIADA NO SERVICE PARA O PEDIDO: " + request);
+        System.out.println("\n--- INICIANDO SAGA PARA O PEDIDO: " + request + " ---");
 
-        // 1. Gerar um ID único para o pedido
+        // ETAPA 1: Criação do Pedido
         String idPedido = UUID.randomUUID().toString();
+        PedidoDTO pedidoDTO = criarPedidoDTO(request, idPedido);
 
-        // 2. Criar o PedidoDTO com status inicial PENDENTE
+        System.out.println("ETAPA 1: Enviando para pedido-service...");
+        PedidoDTO pedidoCriado = restTemplate.postForObject(PEDIDO_SERVICE_URL, pedidoDTO, PedidoDTO.class);
+        System.out.println("Retorno do pedido-service: " + pedidoCriado);
+
+        // ETAPA 2: Processamento do Pagamento
+        System.out.println("\nETAPA 2: Enviando para pagamento-service...");
+        PedidoDTO pedidoComPagamento = restTemplate.postForObject(PAGAMENTO_SERVICE_URL, pedidoCriado, PedidoDTO.class);
+        System.out.println("Retorno do pagamento-service: " + pedidoComPagamento);
+
+        // Lógica de decisão baseada no status do pagamento
+        if (StatusOrquestrador.SUCESSO.equals(pedidoComPagamento.getStatus())) {
+            System.out.println("\nSUCESSO: Pagamento aprovado. Continuando a saga...");
+            // Próximo passo seria chamar o estoque-service
+        } else {
+            System.out.println("\nFALHA: Pagamento recusado. Iniciando compensação...");
+            // Próximo passo seria chamar a compensação do pedido-service
+        }
+
+        System.out.println("--- FIM DA SAGA ---");
+    }
+
+    private PedidoDTO criarPedidoDTO(OrquestradorRequestDTO request, String idPedido) {
         PedidoDTO pedidoDTO = new PedidoDTO();
         pedidoDTO.setIdPedido(idPedido);
         pedidoDTO.setIdUsuario(request.getIdUsuario());
         pedidoDTO.setIdProduto(request.getIdProduto());
+        pedidoDTO.setDescricao(request.getDescricao()); // <-- ADICIONADO AQUI
         pedidoDTO.setValor(request.getValor());
         pedidoDTO.setStatus(StatusOrquestrador.PENDENTE);
-
-        System.out.println("Enviando PedidoDTO para pedido-service: " + pedidoDTO);
-
-        // 3. Chamar o pedido-service para criar o pedido
-        // O pedido-service retornará o PedidoDTO atualizado (com o mesmo ID e status, por enquanto)
-        PedidoDTO pedidoCriado = restTemplate.postForObject(PEDIDO_SERVICE_URL, pedidoDTO, PedidoDTO.class);
-
-        System.out.println("Retorno do pedido-service: " + pedidoCriado);
-
-        // A lógica de continuar a saga (pagamento, estoque) virá aqui
+        return pedidoDTO;
     }
 }
