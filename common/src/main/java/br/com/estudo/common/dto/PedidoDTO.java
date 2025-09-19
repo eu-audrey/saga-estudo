@@ -1,5 +1,6 @@
 package br.com.estudo.common.dto;
 
+import br.com.estudo.common.enums.StatusOrquestrador;
 import java.math.BigDecimal;
 
 public class PedidoDTO {
@@ -8,6 +9,7 @@ public class PedidoDTO {
     private Integer idUsuario;
     private Integer idProduto;
     private BigDecimal valor;
+    private StatusOrquestrador status;
 
     public String getIdPedido() {
         return idPedido;
@@ -39,5 +41,24 @@ public class PedidoDTO {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public StatusOrquestrador getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusOrquestrador status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "PedidoDTO{" +
+                "idPedido='" + idPedido + '\'' +
+                ", idUsuario=" + idUsuario +
+                ", idProduto=" + idProduto +
+                ", valor=" + valor +
+                ", status=" + status +
+                '}';
     }
 }

@@ -1,6 +1,8 @@
 package br.com.estudo.orquestrador.controller;
 
 import br.com.estudo.common.dto.OrquestradorRequestDTO;
+import br.com.estudo.orquestrador.service.OrquestradorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,15 +10,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/orquestrador")
 public class OrquestradorController {
 
+    @Autowired
+    private OrquestradorService orquestradorService;
+
     @GetMapping("/saude")
     public String healthCheck() {
-        return "Orquestrador is up and running!";
+        return "Orquestrador está de pé e rodando!";
     }
 
     @PostMapping("/iniciar-pedido")
-    public ResponseEntity<?> iniciarPedido(@RequestBody OrquestradorRequestDTO request) {
-        // Lógica para iniciar a saga virá aqui
-        System.out.println("Recebido pedido para iniciar saga: " + request);
+    public ResponseEntity<?> iniciarPedido(@RequestBody OrquestradorRequestDTO requisicao) {
+        orquestradorService.iniciarSaga(requisicao);
         return ResponseEntity.ok("Saga do pedido iniciada!");
     }
 }

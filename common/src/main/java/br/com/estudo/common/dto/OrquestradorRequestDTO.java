@@ -6,6 +6,7 @@ public class OrquestradorRequestDTO {
 
     private Integer idUsuario;
     private Integer idProduto;
+    private String descricao;
     private BigDecimal valor;
 
     public Integer getIdUsuario() {
@@ -30,5 +31,23 @@ public class OrquestradorRequestDTO {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    @Override
+    public String toString() {
+        return "OrquestradorRequestDTO{" +
+                "idUsuario=" + idUsuario +
+                ", idProduto=" + idProduto +
+                ", descricao=" + descricao +
+                ", valor=" + valor +
+                '}';
     }
 }
