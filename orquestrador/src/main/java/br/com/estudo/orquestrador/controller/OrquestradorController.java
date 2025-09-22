@@ -2,7 +2,6 @@ package br.com.estudo.orquestrador.controller;
 
 import br.com.estudo.common.dto.OrquestradorRequestDTO;
 import br.com.estudo.orquestrador.service.OrquestradorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/orquestrador")
 public class OrquestradorController {
 
-    @Autowired
-    private OrquestradorService orquestradorService;
+    private final OrquestradorService orquestradorService;
+
+    public OrquestradorController(OrquestradorService orquestradorService) {
+        this.orquestradorService = orquestradorService;
+    }
 
     @GetMapping("/saude")
     public String healthCheck() {

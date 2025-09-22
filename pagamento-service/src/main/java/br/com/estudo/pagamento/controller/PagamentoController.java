@@ -2,7 +2,6 @@ package br.com.estudo.pagamento.controller;
 
 import br.com.estudo.common.dto.PedidoDTO;
 import br.com.estudo.pagamento.service.PagamentoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/pagamentos")
 public class PagamentoController {
 
-    @Autowired
-    PagamentoService pagamentoService;
+    private final PagamentoService pagamentoService;
+
+    public PagamentoController(PagamentoService pagamentoService) {
+        this.pagamentoService = pagamentoService;
+    }
 
     @GetMapping("/saude")
     public String healthCheck(){
