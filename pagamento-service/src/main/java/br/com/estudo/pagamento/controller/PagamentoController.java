@@ -21,9 +21,9 @@ public class PagamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<PedidoDTO> processarPagamento(@RequestBody PedidoDTO meuPedido){
-        System.out.println("Módulo pagamento-service recebeu o PedidoDTO para processar o pagamento:" + meuPedido);
-        PedidoDTO pedidoProcessado = pagamentoService.processarPagamento(meuPedido);
-        return ResponseEntity.ok(pedidoProcessado);
+    public ResponseEntity<String> processarPagamento(@RequestBody PedidoDTO meuPedido){
+        System.out.println("Módulo pagamento-service recebeu uma chamada HTTP direta.");
+        pagamentoService.processarPagamento(meuPedido);
+        return ResponseEntity.ok("Processamento iniciado. O resultado será enviado via mensageria.");
     }
 }

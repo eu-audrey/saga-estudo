@@ -1,7 +1,8 @@
 package br.com.estudo.common.enums;
 
 public enum StatusOrquestrador {
+    PENDENTE,
     SUCESSO,
     FALHA,
-    PENDENTE
+    PEDIDO_CRIADO
 }

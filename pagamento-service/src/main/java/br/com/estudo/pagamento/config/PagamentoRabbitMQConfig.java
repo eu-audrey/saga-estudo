@@ -1,4 +1,4 @@
-package br.com.estudo.pedido.config;
+package br.com.estudo.pagamento.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,24 +14,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class PedidoRabbitMQConfig {
+public class PagamentoRabbitMQConfig {
 
-    // Nomes da infraestrutura (devem ser exatamente os mesmos do orquestrador)
-    public static final String FILA_PEDIDOS = "saga-pedido-fila";
+    // Nomes da infraestrutura
+    public static final String FILA_PAGAMENTOS = "saga-pagamento-fila";
     public static final String EXCHANGE_SAGA = "saga-exchange";
-    public static final String ROUTING_KEY_PEDIDOS = "pedido.comando.criar";
+    public static final String ROUTING_KEY_PAGAMENTOS = "pagamento.comando.processar";
 
-    // --- Nova Routing Key para a Resposta ---
-    public static final String ROUTING_KEY_RESPOSTA_SUCESSO = "pedido.resposta.sucesso";
+    // --- Novas Routing Keys para a Resposta ---
+    public static final String ROUTING_KEY_RESPOSTA_SUCESSO = "pagamento.resposta.sucesso";
+    public static final String ROUTING_KEY_RESPOSTA_FALHA = "pagamento.resposta.falha";
 
     @Bean
-    public Queue pedidosQueue() {
-        return new Queue(FILA_PEDIDOS, true);
+    public Queue pagamentosQueue() {
+        return new Queue(FILA_PAGAMENTOS, true);
     }
 
     @Bean
-    public Binding pedidosBinding(TopicExchange exchange) {
-        return BindingBuilder.bind(pedidosQueue()).to(exchange).with(ROUTING_KEY_PEDIDOS);
+    public Binding pagamentosBinding(TopicExchange exchange) {
+        return BindingBuilder.bind(pagamentosQueue()).to(exchange).with(ROUTING_KEY_PAGAMENTOS);
     }
 
     @Bean
@@ -46,7 +47,6 @@ public class PedidoRabbitMQConfig {
         return new Jackson2JsonMessageConverter(objectMapper);
     }
 
-    // Bean para fornecer o RabbitTemplate, que será usado para enviar a resposta
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
