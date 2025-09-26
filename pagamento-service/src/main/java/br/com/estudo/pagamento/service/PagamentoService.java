@@ -28,7 +28,7 @@ public class PagamentoService {
             enviarResposta(PagamentoRabbitMQConfig.ROUTING_KEY_RESPOSTA_FALHA, pedidoDTO);
         } else {
             System.out.println("Pagamento APROVADO para o pedido " + pedidoDTO.getIdPedido() + ".");
-            pedidoDTO.setStatus(StatusOrquestrador.SUCESSO);
+            pedidoDTO.setStatus(StatusOrquestrador.PAGAMENTO_APROVADO);
             enviarResposta(PagamentoRabbitMQConfig.ROUTING_KEY_RESPOSTA_SUCESSO, pedidoDTO);
         }
         System.out.println("--- PAGAMENTO-SERVICE FINALIZADO ---");

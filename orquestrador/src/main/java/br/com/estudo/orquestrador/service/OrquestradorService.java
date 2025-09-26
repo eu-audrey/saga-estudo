@@ -33,15 +33,17 @@ public class OrquestradorService {
                 System.out.println("ETAPA 2: Pedido criado com sucesso. Enviando para processamento de pagamento...");
                 enviarParaFila(RabbitMQConfig.ROUTING_KEY_PAGAMENTOS, pedidoDTO);
                 break;
-            case SUCESSO:
+            case PAGAMENTO_APROVADO:
+                System.out.println("ETAPA 3: Pagamento aprovado. Enviando para separação de estoque...");
+                enviarParaFila(RabbitMQConfig.ROUTING_KEY_ESTOQUE, pedidoDTO);
+                break;
+            case SUCESSO: // Este status virá do estoque-service no futuro
                 System.out.println("\n--- SAGA CONCLUÍDA COM SUCESSO ---");
                 System.out.println("Pedido finalizado: " + pedidoDTO.getIdPedido());
-                // Aqui entraria a chamada para a próxima etapa (ex: estoque)
                 break;
             case FALHA:
                 System.out.println("\n--- SAGA FALHOU ---");
                 System.out.println("Iniciando processo de compensação para o pedido: " + pedidoDTO.getIdPedido());
-                // Aqui entraria a chamada para a lógica de compensação
                 break;
             default:
                 System.out.println("Saga interrompida devido a status inesperado: " + pedidoDTO.getStatus());

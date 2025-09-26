@@ -28,6 +28,7 @@ public class RabbitMQConfig {
     public static final String FILA_RESPOSTA_ORQUESTRADOR = "saga-orquestrador-resposta-fila";
     public static final String ROUTING_KEY_RESPOSTA_PEDIDO = "pedido.resposta.#";
     public static final String ROUTING_KEY_RESPOSTA_PAGAMENTO = "pagamento.resposta.#";
+    public static final String ROUTING_KEY_RESPOSTA_ESTOQUE = "estoque.resposta.#";
 
     @Bean
     public TopicExchange sagaExchange() {
@@ -50,6 +51,12 @@ public class RabbitMQConfig {
     @Bean
     public Binding respostaPagamentoBinding(TopicExchange exchange, Queue respostaOrquestradorQueue) {
         return BindingBuilder.bind(respostaOrquestradorQueue).to(exchange).with(ROUTING_KEY_RESPOSTA_PAGAMENTO);
+    }
+
+    // Bean para o vínculo (binding) da fila de respostas de estoque
+    @Bean
+    public Binding respostaEstoqueBinding(TopicExchange exchange, Queue respostaOrquestradorQueue) {
+        return BindingBuilder.bind(respostaOrquestradorQueue).to(exchange).with(ROUTING_KEY_RESPOSTA_ESTOQUE);
     }
 
     @Bean
